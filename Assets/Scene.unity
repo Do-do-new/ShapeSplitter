@@ -139,27 +139,11 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2a42249a312f06543af0b0b89b093cb3, type: 3}
-  m_RootGameObject: {fileID: 1775180706}
   m_IsPrefabParent: 0
---- !u!1 &1664967410
+--- !u!1 &1664967410 stripped
 GameObject:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989, type: 3}
   m_PrefabInternal: {fileID: 1986986410}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1664967415}
-  - 33: {fileID: 1664967414}
-  - 23: {fileID: 1664967413}
-  - 64: {fileID: 1664967412}
-  - 114: {fileID: 1664967411}
-  m_Layer: 0
-  m_Name: tetrahedron
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!114 &1664967411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,76 +167,10 @@ MeshCollider:
   serializedVersion: 2
   m_Convex: 0
   m_Mesh: {fileID: 4300000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989, type: 3}
---- !u!23 &1664967413
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 2300000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989,
-    type: 3}
-  m_PrefabInternal: {fileID: 1986986410}
-  m_GameObject: {fileID: 1664967410}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 2100000, guid: 92eabdb71a9d52d4aa0abafc2d46e6c2, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!33 &1664967414
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989,
-    type: 3}
-  m_PrefabInternal: {fileID: 1986986410}
-  m_GameObject: {fileID: 1664967410}
-  m_Mesh: {fileID: 4300000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989, type: 3}
---- !u!4 &1664967415
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989, type: 3}
-  m_PrefabInternal: {fileID: 1986986410}
-  m_GameObject: {fileID: 1664967410}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
---- !u!1 &1775180706
+--- !u!1 &1775180706 stripped
 GameObject:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 2a42249a312f06543af0b0b89b093cb3, type: 3}
   m_PrefabInternal: {fileID: 343339102}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1775180711}
-  - 33: {fileID: 1775180710}
-  - 23: {fileID: 1775180709}
-  - 64: {fileID: 1775180708}
-  - 114: {fileID: 1775180707}
-  m_Layer: 0
-  m_Name: prop_asteroid_03
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
 --- !u!114 &1775180707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,57 +194,6 @@ MeshCollider:
   serializedVersion: 2
   m_Convex: 0
   m_Mesh: {fileID: 4300000, guid: 2a42249a312f06543af0b0b89b093cb3, type: 3}
---- !u!23 &1775180709
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 2300000, guid: 2a42249a312f06543af0b0b89b093cb3,
-    type: 3}
-  m_PrefabInternal: {fileID: 343339102}
-  m_GameObject: {fileID: 1775180706}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 10756, guid: 0000000000000000e000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!33 &1775180710
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: 2a42249a312f06543af0b0b89b093cb3,
-    type: 3}
-  m_PrefabInternal: {fileID: 343339102}
-  m_GameObject: {fileID: 1775180706}
-  m_Mesh: {fileID: 4300000, guid: 2a42249a312f06543af0b0b89b093cb3, type: 3}
---- !u!4 &1775180711
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: 2a42249a312f06543af0b0b89b093cb3, type: 3}
-  m_PrefabInternal: {fileID: 343339102}
-  m_GameObject: {fileID: 1775180706}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
 --- !u!1001 &1986986410
 Prefab:
   m_ObjectHideFlags: 0
@@ -373,7 +240,7 @@ Prefab:
     - target: {fileID: 2300000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 92eabdb71a9d52d4aa0abafc2d46e6c2, type: 2}
+      objectReference: {fileID: 10756, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 400000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
@@ -385,7 +252,6 @@ Prefab:
     m_RemovedComponents:
     - {fileID: 9500000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989, type: 3}
   m_ParentPrefab: {fileID: 100100000, guid: 66c21b5c8e0d14e4ab9e3b0732c25989, type: 3}
-  m_RootGameObject: {fileID: 1664967410}
   m_IsPrefabParent: 0
 --- !u!1 &2103284169
 GameObject:
@@ -499,7 +365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clickTolerance: 0.1
-  duplicationTolerance: 0
+  duplicationTolerance: 0.05
   vertexSelectionTolerance: 0.1
 --- !u!1 &2135383985
 GameObject:

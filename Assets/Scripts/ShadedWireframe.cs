@@ -5,11 +5,11 @@ public class ShadedWireframe : MonoBehaviour {
 
 	void OnPreRender()
 	{
-		//GL.wireframe = true;
+		GL.wireframe = true;
 	}
 
 	void OnPostRender()
 	{
-		//GL.wireframe = false;
+		GL.wireframe = false;
 	}
 }

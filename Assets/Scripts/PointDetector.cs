@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PointDetector : MonoBehaviour {
 
@@ -7,33 +9,60 @@ public class PointDetector : MonoBehaviour {
 	public float duplicationTolerance;
 	public float vertexSelectionTolerance;
 
-	Camera cam;
-
-	void Start() {
-		cam = GetComponent<Camera>();
+	public List<Vector3> Points 
+	{
+		get 
+		{
+			return points;
+		}
 	}
 
+	List<Vector3> points;
 
+	Camera cam;
+
+	Transform hitTransform;
+
+	bool intersectionDrawn = false;
+
+	void Start() 
+	{
+		hitTransform = null;
+		cam = GetComponent<Camera>();
+		points = new List<Vector3> ();
+	}
+		
 	void Update() 
 	{
+		// only 3 points were needed to form the plane
+		if (points.Count >= 3) 
+		{
+			if (!intersectionDrawn) 
+			{
+				for (int i = 0; i < 1; ++i) 
+				{
+					DrawLine(points[i],points[(i+1)%3],parent: hitTransform);
+				}
+				intersectionDrawn = true;
+			}
+			return;
+		}
 		// process only if mouse is down
 		if (!Input.GetMouseButtonDown(0))
 			return;
 		Ray camRay = cam.ScreenPointToRay (Input.mousePosition);
 		Vector3 closestEdgePointFrtSide;
 		float dstncToEdgPntFrtSide;
-		RaycastHit hit;
-		bool collided = DetectClosestEdgePoint (camRay, out closestEdgePointFrtSide, out dstncToEdgPntFrtSide, out hit);
+		bool collided = DetectClosestEdgePoint (camRay, out closestEdgePointFrtSide, out dstncToEdgPntFrtSide);
 		if (collided) 
 		{
 			Vector3 origin4ExitingRay = camRay.origin + camRay.direction.normalized * cam.farClipPlane;
 			Ray exitingRay = new Ray (origin4ExitingRay, -camRay.direction);
 			Vector3 closestEdgePointHiddenSide;
 			float dstncToEdgPntHdnSide;
-			collided = DetectClosestEdgePoint (exitingRay, out closestEdgePointHiddenSide, out dstncToEdgPntHdnSide, out hit);
+			collided = DetectClosestEdgePoint (exitingRay, out closestEdgePointHiddenSide, out dstncToEdgPntHdnSide);
 			if (collided) 
 			{
-				
 				Vector3 closestPoint;
 				float distanceToClosestPoint;
 				if (dstncToEdgPntFrtSide < dstncToEdgPntHdnSide) 
@@ -46,81 +75,90 @@ public class PointDetector : MonoBehaviour {
 					distanceToClosestPoint = dstncToEdgPntHdnSide;
 					closestPoint = closestEdgePointHiddenSide;
 				}
-				if (distanceToClosestPoint < clickTolerance)	
-					DrawSphere (closestPoint, hit.transform);
+				if (distanceToClosestPoint < clickTolerance) 
+				{
+					points.Add (closestPoint);	
+					DrawSphere (closestPoint, parent: hitTransform);
+				}
 			}
 		}
 	}
 
-	bool DetectClosestEdgePoint(Ray camRay, out Vector3 closestEdgePoint, out float minDistance, out RaycastHit hit)
+	bool DetectClosestEdgePoint(Ray camRay, out Vector3 closestEdgePoint, out float minDistance)
 	{
 		closestEdgePoint = new Vector3 ();
 		minDistance = 0.0f;
+		//raycast and detect if we hit any collider
+		RaycastHit hit;
 		if (!Physics.Raycast(camRay, out hit))
 			return false;
+
+		if (IsCloseToExisting (hit.point))
+			return false;
+		
+		// get the triangle we hit
 		MeshCollider meshCollider = hit.collider as MeshCollider;
 		if (meshCollider == null || meshCollider.sharedMesh == null)
 			return false;
 		Mesh mesh = meshCollider.sharedMesh;
-		Vector3[] vertices = mesh.vertices;
+		Vector3[] meshVertices = mesh.vertices;
 		int[] triangles = mesh.triangles;
-		Vector3 p0 = vertices[triangles[hit.triangleIndex * 3 + 0]];
-		Vector3 p1 = vertices[triangles[hit.triangleIndex * 3 + 1]];
-		Vector3 p2 = vertices[triangles[hit.triangleIndex * 3 + 2]];
-		Transform hitTransform = hit.collider.transform;
-		p0 = hitTransform.TransformPoint(p0);
-		p1 = hitTransform.TransformPoint(p1);
-		p2 = hitTransform.TransformPoint(p2);
+		Vector3[] trVertices = new Vector3[3]; // hold the triangle vertices
+		for (byte i =0; i<3; ++i)
+			trVertices[i] = meshVertices[triangles[hit.triangleIndex * 3 + i]];
+		hitTransform = hit.collider.transform;
+		for (byte i =0; i<3; ++i)
+			trVertices[i] = hitTransform.TransformPoint(trVertices[i]);
 
-		if (IsVertexClose (hit.point, p0)) 
+		if (IsCloseToVertex (hit.point, trVertices, out closestEdgePoint)) 
 		{
-			closestEdgePoint = p0;
 			minDistance = 0.0f;
 			return true;
 		}
-		if (IsVertexClose (hit.point, p1)) 
-		{
-			closestEdgePoint = p1;
-			minDistance = 0.0f;
-			return true;
-		}
-		if (IsVertexClose (hit.point, p2)) 
-		{
-			closestEdgePoint = p2;
-			minDistance = 0.0f;
-			return true;
-		}
-			
-		Vector3 intscPnt = PointToSegment (hit.point, p0, p1);
-		float crtDistance = Vector3.Distance (intscPnt,hit.point);
-		minDistance = crtDistance;
-		closestEdgePoint = intscPnt;
 
-		intscPnt = PointToSegment (hit.point, p0, p2);
-		crtDistance = Vector3.Distance (intscPnt,hit.point);
-		if (crtDistance < minDistance) 
+		minDistance = float.MaxValue;
+
+		for (byte i = 0; i < 3; ++i) 
 		{
-			minDistance = crtDistance;
-			closestEdgePoint = intscPnt;
+			Vector3 intscPnt = PointToSegment (hit.point, trVertices[i], trVertices[(i+1)%3]);
+			float crtDistance = Vector3.Distance (intscPnt,hit.point);
+			if (crtDistance < minDistance) 
+			{
+				minDistance = crtDistance;
+				closestEdgePoint = intscPnt;
+			}
 		}
 
-		intscPnt = PointToSegment (hit.point, p1, p2);
-		crtDistance = Vector3.Distance (intscPnt,hit.point);
-		if (crtDistance < minDistance) 
-		{
-			minDistance = crtDistance;
-			closestEdgePoint = intscPnt;
-		}
 		return true;
 	}
 
-	public bool IsVertexClose(Vector3 p, Vector3 vertex)
+	public bool IsCloseToVertex(Vector3 p, Vector3[] trVertices, out Vector3 closeVertex)
 	{
-		return (Vector3.Distance(p, vertex) < vertexSelectionTolerance);
+		closeVertex = new Vector3 ();
+		for (byte i = 0; i < 3; ++i) 
+		{
+			if (Vector3.Distance (p, trVertices [i]) < vertexSelectionTolerance) 
+			{
+				closeVertex = trVertices [i];
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool IsCloseToExisting(Vector3 newPoint)
+	{
+		for (int i = 0; i < points.Count; ++i) 
+		{
+			if (Vector3.Distance (newPoint, points [i]) < duplicationTolerance)
+				return true;
+		}
+		return false;
 	}
 
 	/// <summary>
-	/// Calculates an intersection of a normal from a point p to a line formed by points x and y
+	/// Calculates an intersection of a normal from a point p to a line formed by points x and y,
+	/// in other words the point on the segment x-y, which is closest to the specified point p
 	/// </summary>
 	/// <returns>an intersection of a normal from a point p to a line formed by points x and y</returns>
 	/// <param name="p">point from which to cast normal</param>
@@ -143,14 +181,31 @@ public class PointDetector : MonoBehaviour {
 
 		return (x + b * v);
 	}
-
-	GameObject DrawSphere(Vector3 center, Transform parent = null, float radius = 0.02f)
+		
+	void DrawSphere(Vector3 center, Transform parent = null, float radius = 0.05f)
 	{
 		GameObject sphere  = GameObject.CreatePrimitive (PrimitiveType.Sphere);
-		sphere.transform.localScale = new Vector3 (radius, radius, radius);
-		sphere.transform.position = center;
 		if (parent != null)
 			sphere.transform.SetParent (parent);
-		return sphere;
+		sphere.GetComponent<Renderer> ().material.color = Color.red;
+		sphere.transform.localScale = new Vector3 (radius, radius, radius);
+		sphere.transform.position = center;
 	}
+
+	void DrawLine(Vector3 start, Vector3 end, Transform parent = null)
+	{
+		GameObject myLine = new GameObject ();
+		if (parent != null)
+			myLine.transform.parent = parent;
+		myLine.transform.position = start;
+		myLine.AddComponent <LineRenderer>();
+		LineRenderer lr = myLine.GetComponent<LineRenderer> ();
+		//lr.material = new Material (Shader.Find("Particles/Alpha Blended Premultiply"));
+		lr.SetColors (Color.red, Color.red);
+		lr.SetWidth (0.05f, 0.05f);
+		lr.SetPosition (0, start);
+		lr.SetPosition (1, end);
+	}
+
+
 }
